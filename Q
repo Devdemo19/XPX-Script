@@ -1,12 +1,12 @@
 --[[ 
- XPX DEMON X
- XPX Style UI (Full)
+ XPX DEMON
+ FH7 Dark Black UI Full
  By demon dev × Devdemo19
 ]]
 
 -- Clean previous
-if game.CoreGui:FindFirstChild("XPX_DEMON_X") then
-    game.CoreGui.XPX_DEMON_X:Destroy()
+if game.CoreGui:FindFirstChild("XPX_DEMON") then
+    game.CoreGui.XPX_DEMON:Destroy()
 end
 
 local Players = game:GetService("Players")
@@ -15,14 +15,17 @@ local LP = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 local Mouse = LP:GetMouse()
 
+local Black = Color3.fromRGB(0,0,0)
+local White = Color3.fromRGB(255,255,255)
+
 -- GUI
 local GUI = Instance.new("ScreenGui", game.CoreGui)
-GUI.Name = "XPX_DEMON_X"
+GUI.Name = "XPX_DEMON"
 
 local Main = Instance.new("Frame", GUI)
 Main.Size = UDim2.new(0,650,0,450)
 Main.Position = UDim2.new(0.5,-325,0.5,-225)
-Main.BackgroundColor3 = Color3.fromRGB(15,15,15)
+Main.BackgroundColor3 = Black
 Main.Active = true
 Main.Draggable = true
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0,20)
@@ -33,14 +36,14 @@ Title.Size = UDim2.new(1,0,0,50)
 Title.Text = "😈 XPX DEMON  |  By demon dev × Devdemo19"
 Title.Font = Enum.Font.GothamBlack
 Title.TextSize = 20
-Title.TextColor3 = Color3.fromRGB(170,0,255)
+Title.TextColor3 = White
 Title.BackgroundTransparency = 1
 
 -- Tabs bar
 local Tabs = Instance.new("Frame", Main)
 Tabs.Size = UDim2.new(0,140,1,-50)
 Tabs.Position = UDim2.new(0,0,0,50)
-Tabs.BackgroundColor3 = Color3.fromRGB(20,20,20)
+Tabs.BackgroundColor3 = Black
 
 -- Pages container
 local Pages = Instance.new("Folder", Main)
@@ -63,8 +66,8 @@ local function TabBtn(txt,y,page)
     b.Text = txt
     b.Font = Enum.Font.GothamBold
     b.TextSize = 14
-    b.TextColor3 = Color3.new(1,1,1)
-    b.BackgroundColor3 = Color3.fromRGB(30,30,30)
+    b.TextColor3 = White
+    b.BackgroundColor3 = Black
     Instance.new("UICorner", b)
 
     b.MouseButton1Click:Connect(function()
@@ -97,8 +100,8 @@ local function Btn(parent,text,y)
     b.Text = text
     b.Font = Enum.Font.GothamBold
     b.TextSize = 13
-    b.BackgroundColor3 = Color3.fromRGB(35,35,35)
-    b.TextColor3 = Color3.new(1,1,1)
+    b.BackgroundColor3 = Color3.fromRGB(10,10,10) -- كحل قاتم للأزرار
+    b.TextColor3 = White
     Instance.new("UICorner", b)
     return b
 end
@@ -146,7 +149,7 @@ Btn(VisualPage,"👁 ESP Toggle",20).MouseButton1Click:Connect(function()
                     t.Size = UDim2.new(1,0,1,0)
                     t.Text = p.Name
                     t.BackgroundTransparency = 1
-                    t.TextColor3 = Color3.fromRGB(255,0,0)
+                    t.TextColor3 = White
                 end
             else
                 if p.Character.Head:FindFirstChild("XPX_ESP") then
