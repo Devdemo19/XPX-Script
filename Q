@@ -1,150 +1,152 @@
---[[
- XPX DEMON v2 🔥
- All‑in‑One Edition
- By demon dev × Devdemo19 😈
+--[[ 
+ XPX DEMON X
+ XPX Style UI (Full)
+ By demon dev × Devdemo19
 ]]
 
--- 🛑 Anti Inject
-if game.CoreGui:FindFirstChild("XPX_DEMON_V2") then
-    game.CoreGui.XPX_DEMON_V2:Destroy()
+-- Clean previous
+if game.CoreGui:FindFirstChild("XPX_DEMON_X") then
+    game.CoreGui.XPX_DEMON_X:Destroy()
 end
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LP = Players.LocalPlayer
-local Mouse = LP:GetMouse()
 local Camera = workspace.CurrentCamera
+local Mouse = LP:GetMouse()
 
--- 🌌 GUI
+-- GUI
 local GUI = Instance.new("ScreenGui", game.CoreGui)
-GUI.Name = "XPX_DEMON_V2"
+GUI.Name = "XPX_DEMON_X"
 
 local Main = Instance.new("Frame", GUI)
-Main.Size = UDim2.new(0,560,0,420)
-Main.Position = UDim2.new(0.5,-280,0.5,-210)
-Main.BackgroundColor3 = Color3.fromRGB(10,10,10)
+Main.Size = UDim2.new(0,650,0,450)
+Main.Position = UDim2.new(0.5,-325,0.5,-225)
+Main.BackgroundColor3 = Color3.fromRGB(15,15,15)
 Main.Active = true
 Main.Draggable = true
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0,22)
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0,20)
 
+-- Intro / Title
 local Title = Instance.new("TextLabel", Main)
-Title.Size = UDim2.new(1,0,0,55)
-Title.Text = "😈 XPX DEMON | demon dev × Devdemo19"
+Title.Size = UDim2.new(1,0,0,50)
+Title.Text = "😈 XPX DEMON  |  By demon dev × Devdemo19"
 Title.Font = Enum.Font.GothamBlack
 Title.TextSize = 20
-Title.TextColor3 = Color3.fromRGB(190,0,255)
+Title.TextColor3 = Color3.fromRGB(170,0,255)
 Title.BackgroundTransparency = 1
 
--- 🔘 Button Maker
-local function Btn(txt,x,y)
-    local b = Instance.new("TextButton", Main)
-    b.Size = UDim2.new(0,220,0,44)
-    b.Position = UDim2.new(0,x,y,0)
+-- Tabs bar
+local Tabs = Instance.new("Frame", Main)
+Tabs.Size = UDim2.new(0,140,1,-50)
+Tabs.Position = UDim2.new(0,0,0,50)
+Tabs.BackgroundColor3 = Color3.fromRGB(20,20,20)
+
+-- Pages container
+local Pages = Instance.new("Folder", Main)
+
+-- Helper to create pages
+local function NewPage(name)
+    local f = Instance.new("Frame", Pages)
+    f.Name = name
+    f.Size = UDim2.new(1,-140,1,-50)
+    f.Position = UDim2.new(0,140,0,50)
+    f.BackgroundTransparency = 1
+    f.Visible = false
+    return f
+end
+
+local function TabBtn(txt,y,page)
+    local b = Instance.new("TextButton", Tabs)
+    b.Size = UDim2.new(1,0,0,45)
+    b.Position = UDim2.new(0,0,0,y)
     b.Text = txt
     b.Font = Enum.Font.GothamBold
     b.TextSize = 14
-    b.BackgroundColor3 = Color3.fromRGB(28,28,28)
+    b.TextColor3 = Color3.new(1,1,1)
+    b.BackgroundColor3 = Color3.fromRGB(30,30,30)
+    Instance.new("UICorner", b)
+
+    b.MouseButton1Click:Connect(function()
+        for _,v in pairs(Pages:GetChildren()) do
+            v.Visible = false
+        end
+        page.Visible = true
+    end)
+end
+
+-- Pages
+local MainPage = NewPage("Main")
+local PlayerPage = NewPage("Player")
+local VisualPage = NewPage("Visual")
+local FunPage = NewPage("Fun")
+
+MainPage.Visible = true
+
+-- Tabs
+TabBtn("🏠 Main",0,MainPage)
+TabBtn("👤 Player",45,PlayerPage)
+TabBtn("👁 Visual",90,VisualPage)
+TabBtn("😈 Fun",135,FunPage)
+
+-- Button maker
+local function Btn(parent,text,y)
+    local b = Instance.new("TextButton", parent)
+    b.Size = UDim2.new(0,240,0,40)
+    b.Position = UDim2.new(0,20,0,y)
+    b.Text = text
+    b.Font = Enum.Font.GothamBold
+    b.TextSize = 13
+    b.BackgroundColor3 = Color3.fromRGB(35,35,35)
     b.TextColor3 = Color3.new(1,1,1)
     Instance.new("UICorner", b)
     return b
 end
 
--- 🧩 BUTTONS (يسار)
-local SpeedBtn = Btn("⚡ Speed Boost",0.05,0.20)
-local JumpBtn  = Btn("🦘 Super Jump",0.05,0.32)
-local FlyBtn   = Btn("🕊 Demon Fly",0.05,0.44)
-local BringBtn = Btn("🧲 Bring Parts (Local)",0.05,0.56)
-local BangBtn  = Btn("😈 Bang (Troll)",0.05,0.68)
-
--- 🧩 BUTTONS (يمين)
-local ESPBtn   = Btn("👁 ESP ON/OFF",0.55,0.20)
-local AimBtn   = Btn("🎯 Aim Assist",0.55,0.32)
-local ResetBtn = Btn("♻ Reset Player",0.55,0.44)
-
--- ⚙️ STATES
-local ESP_ON = false
-local AIM_ON = false
-local BANG_ON = false
-
--- ⚡ Speed
-SpeedBtn.MouseButton1Click:Connect(function()
-    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
-        LP.Character.Humanoid.WalkSpeed = 70
-        SpeedBtn.Text = "⚡ Speed Enabled"
+-- ========== MAIN PAGE ==========
+Btn(MainPage,"♻ Reset Character",20).MouseButton1Click:Connect(function()
+    local h = LP.Character:FindFirstChild("Humanoid")
+    if h then
+        h.WalkSpeed = 16
+        h.JumpPower = 50
     end
 end)
 
--- 🦘 Jump
-JumpBtn.MouseButton1Click:Connect(function()
-    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
-        LP.Character.Humanoid.JumpPower = 140
-        JumpBtn.Text = "🦘 Jump Enabled"
-    end
+-- ========== PLAYER PAGE ==========
+Btn(PlayerPage,"⚡ Speed x4",20).MouseButton1Click:Connect(function()
+    LP.Character.Humanoid.WalkSpeed = 70
 end)
 
--- 🕊 Fly (Smooth)
-FlyBtn.MouseButton1Click:Connect(function()
-    if not (LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")) then return end
+Btn(PlayerPage,"🦘 Super Jump",70).MouseButton1Click:Connect(function()
+    LP.Character.Humanoid.JumpPower = 140
+end)
+
+Btn(PlayerPage,"🕊 Fly",120).MouseButton1Click:Connect(function()
     local hrp = LP.Character.HumanoidRootPart
     local bv = Instance.new("BodyVelocity", hrp)
-    local bg = Instance.new("BodyGyro", hrp)
     bv.MaxForce = Vector3.new(1e9,1e9,1e9)
-    bg.MaxTorque = Vector3.new(1e9,1e9,1e9)
     RunService.RenderStepped:Connect(function()
-        if hrp.Parent then
-            bv.Velocity = Camera.CFrame.LookVector * 65
-            bg.CFrame = Camera.CFrame
-        end
-    end)
-    FlyBtn.Text = "🕊 Fly Enabled"
-end)
-
--- 🧲 Bring Parts (محلي وآمن)
-BringBtn.MouseButton1Click:Connect(function()
-    if not (LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")) then return end
-    local hrp = LP.Character.HumanoidRootPart
-    for _,v in ipairs(workspace:GetDescendants()) do
-        if v:IsA("BasePart") and not v.Anchored then
-            pcall(function()
-                v.CFrame = hrp.CFrame * CFrame.new(math.random(-6,6),0,math.random(-6,6))
-            end)
-        end
-    end
-    BringBtn.Text = "🧲 Parts Brought"
-end)
-
--- 😈 Bang (Troll محلي)
-BangBtn.MouseButton1Click:Connect(function()
-    BANG_ON = not BANG_ON
-    BangBtn.Text = BANG_ON and "😈 Bang ON" or "😈 Bang OFF"
-    task.spawn(function()
-        while BANG_ON do
-            task.wait(0.03)
-            if LP.Character and LP.Character:FindFirstChild("HumanoidRootPart") then
-                LP.Character.HumanoidRootPart.CFrame =
-                    LP.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-0.4)
-            end
-        end
+        bv.Velocity = Camera.CFrame.LookVector * 60
     end)
 end)
 
--- 👁 ESP (Name)
-ESPBtn.MouseButton1Click:Connect(function()
-    ESP_ON = not ESP_ON
-    for _,p in ipairs(Players:GetPlayers()) do
+-- ========== VISUAL PAGE ==========
+local ESP = false
+Btn(VisualPage,"👁 ESP Toggle",20).MouseButton1Click:Connect(function()
+    ESP = not ESP
+    for _,p in pairs(Players:GetPlayers()) do
         if p ~= LP and p.Character and p.Character:FindFirstChild("Head") then
-            if ESP_ON then
+            if ESP then
                 if not p.Character.Head:FindFirstChild("XPX_ESP") then
                     local g = Instance.new("BillboardGui", p.Character.Head)
                     g.Name = "XPX_ESP"
-                    g.Size = UDim2.new(0,130,0,45)
+                    g.Size = UDim2.new(0,120,0,40)
                     g.AlwaysOnTop = true
                     local t = Instance.new("TextLabel", g)
                     t.Size = UDim2.new(1,0,1,0)
-                    t.Text = "👁 "..p.Name
+                    t.Text = p.Name
                     t.BackgroundTransparency = 1
                     t.TextColor3 = Color3.fromRGB(255,0,0)
-                    t.Font = Enum.Font.GothamBold
                 end
             else
                 if p.Character.Head:FindFirstChild("XPX_ESP") then
@@ -153,44 +155,20 @@ ESPBtn.MouseButton1Click:Connect(function()
             end
         end
     end
-    ESPBtn.Text = ESP_ON and "👁 ESP ON" or "👁 ESP OFF"
 end)
 
--- 🎯 Aim Assist (خفيف)
-AimBtn.MouseButton1Click:Connect(function()
-    AIM_ON = not AIM_ON
-    AimBtn.Text = AIM_ON and "🎯 Aim ON" or "🎯 Aim OFF"
-end)
-
-RunService.RenderStepped:Connect(function()
-    if AIM_ON then
-        local closest,dist = nil,math.huge
-        for _,p in ipairs(Players:GetPlayers()) do
-            if p ~= LP and p.Character and p.Character:FindFirstChild("Head") then
-                local pos,vis = Camera:WorldToViewportPoint(p.Character.Head.Position)
-                if vis then
-                    local d = (Vector2.new(Mouse.X,Mouse.Y)-Vector2.new(pos.X,pos.Y)).Magnitude
-                    if d < dist then
-                        dist = d
-                        closest = p
-                    end
-                end
-            end
-        end
-        if closest and closest.Character and closest.Character:FindFirstChild("Head") then
-            Camera.CFrame = CFrame.new(Camera.CFrame.Position, closest.Character.Head.Position)
+-- ========== FUN PAGE ==========
+Btn(FunPage,"🧲 Bring Parts (Local)",20).MouseButton1Click:Connect(function()
+    local hrp = LP.Character.HumanoidRootPart
+    for _,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("BasePart") and not v.Anchored then
+            v.CFrame = hrp.CFrame * CFrame.new(math.random(-6,6),0,math.random(-6,6))
         end
     end
 end)
 
--- ♻ Reset
-ResetBtn.MouseButton1Click:Connect(function()
-    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
-        LP.Character.Humanoid.WalkSpeed = 16
-        LP.Character.Humanoid.JumpPower = 50
-    end
-    ESP_ON = false
-    AIM_ON = false
-    BANG_ON = false
-    ResetBtn.Text = "♻ Reset Done"
+Btn(FunPage,"😈 Bang Troll",70).MouseButton1Click:Connect(function()
+    RunService.RenderStepped:Connect(function()
+        LP.Character.HumanoidRootPart.CFrame *= CFrame.new(0,0,-0.4)
+    end)
 end)
