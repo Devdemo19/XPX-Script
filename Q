@@ -1,0 +1,196 @@
+--[[
+ XPX DEMON v2 🔥
+ All‑in‑One Edition
+ By demon dev × Devdemo19 😈
+]]
+
+-- 🛑 Anti Inject
+if game.CoreGui:FindFirstChild("XPX_DEMON_V2") then
+    game.CoreGui.XPX_DEMON_V2:Destroy()
+end
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LP = Players.LocalPlayer
+local Mouse = LP:GetMouse()
+local Camera = workspace.CurrentCamera
+
+-- 🌌 GUI
+local GUI = Instance.new("ScreenGui", game.CoreGui)
+GUI.Name = "XPX_DEMON_V2"
+
+local Main = Instance.new("Frame", GUI)
+Main.Size = UDim2.new(0,560,0,420)
+Main.Position = UDim2.new(0.5,-280,0.5,-210)
+Main.BackgroundColor3 = Color3.fromRGB(10,10,10)
+Main.Active = true
+Main.Draggable = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0,22)
+
+local Title = Instance.new("TextLabel", Main)
+Title.Size = UDim2.new(1,0,0,55)
+Title.Text = "😈 XPX DEMON | demon dev × Devdemo19"
+Title.Font = Enum.Font.GothamBlack
+Title.TextSize = 20
+Title.TextColor3 = Color3.fromRGB(190,0,255)
+Title.BackgroundTransparency = 1
+
+-- 🔘 Button Maker
+local function Btn(txt,x,y)
+    local b = Instance.new("TextButton", Main)
+    b.Size = UDim2.new(0,220,0,44)
+    b.Position = UDim2.new(0,x,y,0)
+    b.Text = txt
+    b.Font = Enum.Font.GothamBold
+    b.TextSize = 14
+    b.BackgroundColor3 = Color3.fromRGB(28,28,28)
+    b.TextColor3 = Color3.new(1,1,1)
+    Instance.new("UICorner", b)
+    return b
+end
+
+-- 🧩 BUTTONS (يسار)
+local SpeedBtn = Btn("⚡ Speed Boost",0.05,0.20)
+local JumpBtn  = Btn("🦘 Super Jump",0.05,0.32)
+local FlyBtn   = Btn("🕊 Demon Fly",0.05,0.44)
+local BringBtn = Btn("🧲 Bring Parts (Local)",0.05,0.56)
+local BangBtn  = Btn("😈 Bang (Troll)",0.05,0.68)
+
+-- 🧩 BUTTONS (يمين)
+local ESPBtn   = Btn("👁 ESP ON/OFF",0.55,0.20)
+local AimBtn   = Btn("🎯 Aim Assist",0.55,0.32)
+local ResetBtn = Btn("♻ Reset Player",0.55,0.44)
+
+-- ⚙️ STATES
+local ESP_ON = false
+local AIM_ON = false
+local BANG_ON = false
+
+-- ⚡ Speed
+SpeedBtn.MouseButton1Click:Connect(function()
+    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
+        LP.Character.Humanoid.WalkSpeed = 70
+        SpeedBtn.Text = "⚡ Speed Enabled"
+    end
+end)
+
+-- 🦘 Jump
+JumpBtn.MouseButton1Click:Connect(function()
+    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
+        LP.Character.Humanoid.JumpPower = 140
+        JumpBtn.Text = "🦘 Jump Enabled"
+    end
+end)
+
+-- 🕊 Fly (Smooth)
+FlyBtn.MouseButton1Click:Connect(function()
+    if not (LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")) then return end
+    local hrp = LP.Character.HumanoidRootPart
+    local bv = Instance.new("BodyVelocity", hrp)
+    local bg = Instance.new("BodyGyro", hrp)
+    bv.MaxForce = Vector3.new(1e9,1e9,1e9)
+    bg.MaxTorque = Vector3.new(1e9,1e9,1e9)
+    RunService.RenderStepped:Connect(function()
+        if hrp.Parent then
+            bv.Velocity = Camera.CFrame.LookVector * 65
+            bg.CFrame = Camera.CFrame
+        end
+    end)
+    FlyBtn.Text = "🕊 Fly Enabled"
+end)
+
+-- 🧲 Bring Parts (محلي وآمن)
+BringBtn.MouseButton1Click:Connect(function()
+    if not (LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")) then return end
+    local hrp = LP.Character.HumanoidRootPart
+    for _,v in ipairs(workspace:GetDescendants()) do
+        if v:IsA("BasePart") and not v.Anchored then
+            pcall(function()
+                v.CFrame = hrp.CFrame * CFrame.new(math.random(-6,6),0,math.random(-6,6))
+            end)
+        end
+    end
+    BringBtn.Text = "🧲 Parts Brought"
+end)
+
+-- 😈 Bang (Troll محلي)
+BangBtn.MouseButton1Click:Connect(function()
+    BANG_ON = not BANG_ON
+    BangBtn.Text = BANG_ON and "😈 Bang ON" or "😈 Bang OFF"
+    task.spawn(function()
+        while BANG_ON do
+            task.wait(0.03)
+            if LP.Character and LP.Character:FindFirstChild("HumanoidRootPart") then
+                LP.Character.HumanoidRootPart.CFrame =
+                    LP.Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-0.4)
+            end
+        end
+    end)
+end)
+
+-- 👁 ESP (Name)
+ESPBtn.MouseButton1Click:Connect(function()
+    ESP_ON = not ESP_ON
+    for _,p in ipairs(Players:GetPlayers()) do
+        if p ~= LP and p.Character and p.Character:FindFirstChild("Head") then
+            if ESP_ON then
+                if not p.Character.Head:FindFirstChild("XPX_ESP") then
+                    local g = Instance.new("BillboardGui", p.Character.Head)
+                    g.Name = "XPX_ESP"
+                    g.Size = UDim2.new(0,130,0,45)
+                    g.AlwaysOnTop = true
+                    local t = Instance.new("TextLabel", g)
+                    t.Size = UDim2.new(1,0,1,0)
+                    t.Text = "👁 "..p.Name
+                    t.BackgroundTransparency = 1
+                    t.TextColor3 = Color3.fromRGB(255,0,0)
+                    t.Font = Enum.Font.GothamBold
+                end
+            else
+                if p.Character.Head:FindFirstChild("XPX_ESP") then
+                    p.Character.Head.XPX_ESP:Destroy()
+                end
+            end
+        end
+    end
+    ESPBtn.Text = ESP_ON and "👁 ESP ON" or "👁 ESP OFF"
+end)
+
+-- 🎯 Aim Assist (خفيف)
+AimBtn.MouseButton1Click:Connect(function()
+    AIM_ON = not AIM_ON
+    AimBtn.Text = AIM_ON and "🎯 Aim ON" or "🎯 Aim OFF"
+end)
+
+RunService.RenderStepped:Connect(function()
+    if AIM_ON then
+        local closest,dist = nil,math.huge
+        for _,p in ipairs(Players:GetPlayers()) do
+            if p ~= LP and p.Character and p.Character:FindFirstChild("Head") then
+                local pos,vis = Camera:WorldToViewportPoint(p.Character.Head.Position)
+                if vis then
+                    local d = (Vector2.new(Mouse.X,Mouse.Y)-Vector2.new(pos.X,pos.Y)).Magnitude
+                    if d < dist then
+                        dist = d
+                        closest = p
+                    end
+                end
+            end
+        end
+        if closest and closest.Character and closest.Character:FindFirstChild("Head") then
+            Camera.CFrame = CFrame.new(Camera.CFrame.Position, closest.Character.Head.Position)
+        end
+    end
+end)
+
+-- ♻ Reset
+ResetBtn.MouseButton1Click:Connect(function()
+    if LP.Character and LP.Character:FindFirstChild("Humanoid") then
+        LP.Character.Humanoid.WalkSpeed = 16
+        LP.Character.Humanoid.JumpPower = 50
+    end
+    ESP_ON = false
+    AIM_ON = false
+    BANG_ON = false
+    ResetBtn.Text = "♻ Reset Done"
+end)
